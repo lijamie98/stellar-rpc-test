@@ -78,6 +78,42 @@ class StellarRpc
         }
     }
 
+    fun getTransactions(startLedger: Int?, cursor: String?): Map<String, Any>? {
+        if (cursor != null) {
+            return callRpc(
+                """
+                {
+                   "jsonrpc":"2.0",
+                   "id":8675309,
+                   "method":"getTransactions",
+                   "params":{
+                      "pagination":{
+                         "cursor":"$cursor",
+                         "limit": 10
+                      }
+                   }
+                }                    
+            """.trimIndent().toRequestBody(jsonMediaType)
+            )
+        } else {
+            return callRpc(
+                """                
+                {
+                  "jsonrpc": "2.0",
+                  "id": 8675309,
+                  "method": "getTransactions",
+                  "params": {
+                    "startLedger": $startLedger,
+                    "pagination": {
+                      "limit": 10
+                    }
+                  }
+                }
+        """.trimIndent().toRequestBody(jsonMediaType)
+            )
+        }
+    }
+
     private fun callRpc(body: RequestBody): Map<String, Any>? {
         val request = builder.post(body).build()
         client.newCall(request).execute().use { response ->
