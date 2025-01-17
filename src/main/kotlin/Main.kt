@@ -13,10 +13,11 @@ fun main() = runBlocking {
     val latestSequence = latestLedger.get("sequence").toString().toDouble().toInt()
     println("Latest ledger sequence: $latestSequence")
 
-    // Stream the events
+    // Stream the transactions from the latest 50 ledgers and stops at 1000 items
     streamTransactions(stellarRpc, latestSequence - 50, 1000)
 
-    streamEvents(stellarRpc, latestSequence - 50, 100)
+    // Stream the events from the latest 50 ledgers and stops at 1000 items
+    streamEvents(stellarRpc, latestSequence - 50, 1000)
 }
 
 fun streamTransactions(stellarRpc: StellarRpc, startLedger: Int, count: Int = -1) {
